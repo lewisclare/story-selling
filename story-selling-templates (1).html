@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymGrow · Story Selling Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: #0a0a0a;
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    padding: 24px 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .header { text-align: center; margin-bottom: 32px; }
+  .header-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+  .header h1 {
+    font-size: 24px; font-weight: 800; margin: 0 0 6px 0;
+    background: linear-gradient(90deg, #fff, rgba(255,255,255,0.7));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+  /* Sequence tabs */
+  .seq-tabs {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px;
+    margin-bottom: 24px; scrollbar-width: none; justify-content: center; flex-wrap: wrap;
+  }
+  .seq-tabs::-webkit-scrollbar { display: none; }
+  .seq-tab {
+    flex-shrink: 0; padding: 8px 14px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .seq-tab.active { border-width: 2px; }
+
+  /* Sequence info bar */
+  .seq-info { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .seq-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .seq-name { font-size: 16px; font-weight: 700; }
+  .seq-count { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+  /* Slide dots */
+  .slide-dots { display: flex; gap: 8px; margin-bottom: 16px; justify-content: center; }
+  .slide-dot {
+    height: 10px; border-radius: 5px; border: none;
+    background: rgba(255,255,255,0.15); cursor: pointer;
+    transition: all 0.25s; padding: 0; width: 10px;
+  }
+  .slide-dot.active { width: 32px; }
+
+  /* Slide preview */
+  .slide-wrap { max-width: 320px; margin: 0 auto 24px; }
+  .slide {
+    width: 100%; aspect-ratio: 9/16; border-radius: 16px;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; padding: 32px 24px; position: relative;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .slide-progress { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 4px; }
+  .slide-progress-bar { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.2); }
+  .slide-label {
+    position: absolute; top: 28px; left: 16px; font-size: 9px;
+    font-weight: 700; letter-spacing: 0.12em;
+  }
+  .slide-type {
+    position: absolute; left: 16px; font-size: 8px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35);
+  }
+  .slide-content { text-align: center; max-width: 90%; }
+  .slide-text {
+    font-size: 20px; font-weight: 800; color: #fff; line-height: 1.3;
+    margin: 0 0 12px 0; white-space: pre-line;
+  }
+  .slide-subtext {
+    font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5;
+    margin: 0; font-style: italic;
+  }
+  .slide-cta-badge {
+    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+    color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    padding: 8px 20px; border-radius: 20px; text-transform: uppercase;
+  }
+
+  /* Nav buttons */
+  .nav-buttons { display: flex; justify-content: center; gap: 12px; margin-bottom: 32px; }
+  .nav-btn {
+    padding: 10px 24px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn.prev {
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.6);
+  }
+  .nav-btn.prev:disabled { color: rgba(255,255,255,0.15); cursor: default; }
+  .nav-btn.next { border-width: 1px; border-style: solid; }
+  .nav-btn.next:disabled { color: rgba(255,255,255,0.15); cursor: default; }
+
+  /* Script section */
+  .script-box {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 20px; max-width: 600px; margin: 0 auto;
+  }
+  .script-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .script-slide {
+    margin-bottom: 16px; padding-left: 14px; border-left: 2px solid rgba(255,255,255,0.06);
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .script-slide.active-border { }
+  .script-slide-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.3); margin-bottom: 4px;
+  }
+  .script-slide-text {
+    font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85);
+    line-height: 1.4; white-space: pre-line;
+  }
+  .script-slide-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; font-style: italic; }
+
+  /* Tips */
+  .tips-box {
+    margin-top: 32px; padding: 20px; background: rgba(255,255,255,0.02);
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);
+    max-width: 600px; margin: 32px auto 0;
+  }
+  .tips-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: rgba(255,255,255,0.3); margin-bottom: 12px; }
+  .tips-box p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 8px 0; }
+  .tips-box p:last-child { margin: 0; }
+  .tips-box span.num { color: #fff; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label mono">GYMGROW · STORY SELLING TEMPLATES</div>
+  <h1>Instagram Story Sequences</h1>
+  <p>7 plug-and-play story sequences to sign more members</p>
+</div>
+
+<div class="seq-tabs" id="seqTabs"></div>
+
+<div class="seq-info">
+  <div class="seq-dot" id="seqDot"></div>
+  <span class="seq-name" id="seqName"></span>
+  <span class="seq-count mono" id="seqCount"></span>
+</div>
+
+<div class="slide-dots" id="slideDots"></div>
+
+<div class="slide-wrap">
+  <div class="slide" id="slidePreview"></div>
+</div>
+
+<div class="nav-buttons">
+  <button class="nav-btn prev mono" id="prevBtn" onclick="prevSlide()">← PREV</button>
+  <button class="nav-btn next mono" id="nextBtn" onclick="nextSlide()">NEXT →</button>
+</div>
+
+<div class="script-box" id="scriptBox"></div>
+
+<div class="tips-box">
+  <div class="tips-label mono">HOW TO USE THESE</div>
+  <p><span class="num">1.</span> Pick a sequence that fits what you want to say today.</p>
+  <p><span class="num">2.</span> Replace the [BRACKETS] with your real words, names, numbers.</p>
+  <p><span class="num">3.</span> Post each slide as a separate Instagram Story — text on screen, talk over it, or both.</p>
+  <p><span class="num">4.</span> The last slide is always the hand raiser — make sure you respond to every DM within 5 mins.</p>
+  <p><span class="num">5.</span> Rotate through a different sequence each week. Don't overthink it — just post.</p>
+</div>
+
+<script>
+const sequences = [
+  {
+    id: "origin", name: "The Origin Story", color: "#E8453C",
+    slides: [
+      { type: "hook", text: "I never planned to open a gym.", subtext: "Here's what actually happened...", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "I was [YOUR OLD JOB/SITUATION] and I hated it.", subtext: "I was training people on the side because I genuinely loved it.", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "One day I thought... what if I actually went all in?", subtext: "So I did. And it was terrifying.", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "Fast forward to today — [YOUR RESULT].", subtext: "Full gym. Amazing members. A life I actually want.", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "cta", text: "If you've been thinking about getting serious about your fitness...", subtext: "DM me \"READY\" and let's chat.", bg: "linear-gradient(160deg, #2d1a1a 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "epiphany", name: "The Epiphany Bridge", color: "#3B82F6",
+    slides: [
+      { type: "hook", text: "The moment everything changed for me.", subtext: "👇", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a1a2d 100%)" },
+      { type: "body", text: "I used to think [COMMON BELIEF YOUR AUDIENCE HAS].", subtext: "e.g. \"You need to train 6x a week to see results\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a1a2d 100%)" },
+      { type: "body", text: "Then I realised...\n[THE ACTUAL TRUTH].", subtext: "e.g. \"3 smart sessions beat 6 junk ones every time\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a1a2d 100%)" },
+      { type: "body", text: "Since making that shift, [RESULT FOR YOU OR CLIENTS].", subtext: "Be specific. Use numbers if you can.", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a1a2d 100%)" },
+      { type: "cta", text: "Want to know exactly how we do this?", subtext: "Tap the link in bio or DM me \"INFO\".", bg: "linear-gradient(160deg, #1a1a2d 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "star-story", name: "Star, Story, Solution", color: "#F59E0B",
+    slides: [
+      { type: "hook", text: "Meet [CLIENT NAME].", subtext: "(Post their photo on this slide)", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d2a1a 100%)" },
+      { type: "body", text: "When [CLIENT] came to us, they were [SITUATION].", subtext: "e.g. \"stressed, no energy, hadn't trained in 3 years\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d2a1a 100%)" },
+      { type: "body", text: "They'd tried [WHAT DIDN'T WORK BEFORE].", subtext: "e.g. \"YouTube workouts, a big box gym, calorie counting apps\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d2a1a 100%)" },
+      { type: "body", text: "[X] weeks later → [SPECIFIC RESULT].", subtext: "e.g. \"Down 8kg. Training 3x a week. Actually enjoying it.\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d2a1a 100%)" },
+      { type: "cta", text: "We have 2 spots opening next week.", subtext: "DM me \"SPOT\" to grab one.", bg: "linear-gradient(160deg, #2d2a1a 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "pasto", name: "Problem → Agitate → Story → CTA", color: "#10B981",
+    slides: [
+      { type: "hook", text: "Honest question:", subtext: "How many times have you started and stopped?", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a2d1a 100%)" },
+      { type: "body", text: "You KNOW what to do.\nYou just can't stay consistent.", subtext: "And every time you fall off, it gets harder to start again.", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a2d1a 100%)" },
+      { type: "body", text: "[CLIENT NAME] said the exact same thing.", subtext: "\"I'd done every programme going. Nothing stuck.\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a2d1a 100%)" },
+      { type: "body", text: "That was [X] months ago.\nNow they [RESULT].", subtext: "The difference? Accountability + a plan that actually fits their life.", bg: "linear-gradient(160deg, #1a1a1a 0%, #1a2d1a 100%)" },
+      { type: "cta", text: "If that sounds like you...", subtext: "DM me \"STUCK\" — no pitch, just a chat.", bg: "linear-gradient(160deg, #1a2d1a 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "soap-opera", name: "The Soap Opera (5-day)", color: "#8B5CF6",
+    slides: [
+      { type: "hook", label: "DAY 1 — THE HOOK", text: "Something happened this week that I need to tell you about.", subtext: "I'll share the full story tomorrow...", bg: "linear-gradient(160deg, #1a1a1a 0%, #1f1a2d 100%)" },
+      { type: "body", label: "DAY 2 — THE BACKSTORY", text: "So here's what happened...\n[Tell the story — a client win, a lesson, a failure].", subtext: "But that's not even the best part. More tomorrow.", bg: "linear-gradient(160deg, #1a1a1a 0%, #1f1a2d 100%)" },
+      { type: "body", label: "DAY 3 — THE TURNING POINT", text: "This is when it clicked:\n[THE KEY INSIGHT OR MOMENT].", subtext: "And the result? I'll show you tomorrow.", bg: "linear-gradient(160deg, #1a1a1a 0%, #1f1a2d 100%)" },
+      { type: "body", label: "DAY 4 — THE PAYOFF", text: "[SHOW THE RESULT — screenshot, photo, numbers].", subtext: "This is what's possible when [CORE MESSAGE].", bg: "linear-gradient(160deg, #1a1a1a 0%, #1f1a2d 100%)" },
+      { type: "cta", label: "DAY 5 — THE CTA", text: "I'm opening [X] spots this month for people who want the same.", subtext: "Reply \"IN\" if you want the details.", bg: "linear-gradient(160deg, #1f1a2d 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "before-after", name: "Before & After Bridge", color: "#EC4899",
+    slides: [
+      { type: "hook", text: "BEFORE:", subtext: "[Describe where your ideal client is RIGHT NOW]", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a2a 100%)" },
+      { type: "body", text: "Tired. Unmotivated.\nStarting over every Monday.", subtext: "(Add your own — make it painfully relatable)", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a2a 100%)" },
+      { type: "body", text: "AFTER:", subtext: "[Paint the picture of life on the other side]", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a2a 100%)" },
+      { type: "body", text: "Confident. Consistent.\nActually looking forward to training.", subtext: "(Use real language your members use)", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a2a 100%)" },
+      { type: "cta", text: "THE BRIDGE = what we do here.", subtext: "DM me \"BRIDGE\" and I'll show you how it works.", bg: "linear-gradient(160deg, #2d1a2a 0%, #1a1a1a 100%)" }
+    ]
+  },
+  {
+    id: "villain", name: "The Villain", color: "#EF4444",
+    slides: [
+      { type: "hook", text: "Unpopular opinion incoming 🔥", subtext: "", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "[THE VILLAIN] is the reason you're not seeing results.", subtext: "e.g. \"That £9.99/month gym\" or \"Fitness influencers selling plans\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "Here's why:\n[2–3 punchy reasons it doesn't work].", subtext: "Be specific. Name the problem without being nasty.", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "body", text: "What actually works?\n[YOUR METHOD IN ONE LINE].", subtext: "e.g. \"A coach who knows your name, a plan built for YOUR life.\"", bg: "linear-gradient(160deg, #1a1a1a 0%, #2d1a1a 100%)" },
+      { type: "cta", text: "Agree? Disagree? Tell me 👇", subtext: "Or DM me if you want to see how we do things differently.", bg: "linear-gradient(160deg, #2d1a1a 0%, #1a1a1a 100%)" }
+    ]
+  }
+];
+
+let activeSeq = 0;
+let activeSlide = 0;
+
+function render() {
+  const seq = sequences[activeSeq];
+
+  // Tabs
+  const tabsEl = document.getElementById('seqTabs');
+  tabsEl.innerHTML = sequences.map((s, i) => {
+    const isActive = i === activeSeq;
+    const borderStyle = isActive ? `2px solid ${s.color}` : '1px solid rgba(255,255,255,0.1)';
+    const bgStyle = isActive ? s.color + '18' : 'rgba(255,255,255,0.03)';
+    const colorStyle = isActive ? s.color : 'rgba(255,255,255,0.5)';
+    return `<button class="seq-tab mono ${isActive ? 'active' : ''}" style="border:${borderStyle};background:${bgStyle};color:${colorStyle}" onclick="selectSeq(${i})">${s.name}</button>`;
+  }).join('');
+
+  // Info bar
+  document.getElementById('seqDot').style.background = seq.color;
+  document.getElementById('seqName').textContent = seq.name;
+  document.getElementById('seqCount').textContent = seq.slides.length + ' slides';
+
+  // Slide dots
+  const dotsEl = document.getElementById('slideDots');
+  dotsEl.innerHTML = seq.slides.map((_, i) => {
+    const isActive = i === activeSlide;
+    return `<button class="slide-dot ${isActive ? 'active' : ''}" style="background:${isActive ? seq.color : 'rgba(255,255,255,0.15)'};width:${isActive ? '32px' : '10px'}" onclick="selectSlide(${i})"></button>`;
+  }).join('');
+
+  // Slide preview
+  const slide = seq.slides[activeSlide];
+  const slideEl = document.getElementById('slidePreview');
+  slideEl.style.background = slide.bg;
+
+  const progressBars = seq.slides.map((_, i) =>
+    `<div class="slide-progress-bar" style="background:${i <= activeSlide ? seq.color : 'rgba(255,255,255,0.2)'}"></div>`
+  ).join('');
+
+  const labelHtml = slide.label
+    ? `<div class="slide-label mono" style="color:${seq.color}">${slide.label}</div>` : '';
+
+  const typeTop = slide.label ? '44px' : '28px';
+  const typeLabel = slide.type === 'hook' ? 'HOOK SLIDE' : slide.type === 'cta' ? 'CTA SLIDE' : 'STORY SLIDE ' + activeSlide;
+
+  const ctaBadge = slide.type === 'cta'
+    ? `<div class="slide-cta-badge mono" style="background:${seq.color}">HAND RAISER ↑</div>` : '';
+
+  slideEl.innerHTML = `
+    <div class="slide-progress">${progressBars}</div>
+    ${labelHtml}
+    <div class="slide-type mono" style="top:${typeTop}">${typeLabel}</div>
+    <div class="slide-content">
+      <p class="slide-text">${slide.text.replace(/\n/g, '<br>')}</p>
+      ${slide.subtext ? `<p class="slide-subtext">${slide.subtext}</p>` : ''}
+    </div>
+    ${ctaBadge}
+  `;
+
+  // Nav buttons
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  prevBtn.disabled = activeSlide === 0;
+  prevBtn.style.color = activeSlide === 0 ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.6)';
+  nextBtn.disabled = activeSlide === seq.slides.length - 1;
+  nextBtn.style.borderColor = seq.color + '44';
+  nextBtn.style.background = seq.color + '15';
+  nextBtn.style.color = activeSlide === seq.slides.length - 1 ? 'rgba(255,255,255,0.15)' : seq.color;
+
+  // Script
+  const scriptBox = document.getElementById('scriptBox');
+  const scriptSlides = seq.slides.map((s, i) => {
+    const label = s.label || (s.type === 'hook' ? 'SLIDE 1 — HOOK' : s.type === 'cta' ? `SLIDE ${i+1} — CTA` : `SLIDE ${i+1}`);
+    const borderColor = i === activeSlide ? seq.color : 'rgba(255,255,255,0.06)';
+    return `
+      <div class="script-slide" style="border-left-color:${borderColor}" onclick="selectSlide(${i})">
+        <div class="script-slide-label mono">${label}</div>
+        <div class="script-slide-text">${s.text.replace(/\n/g, '<br>')}</div>
+        ${s.subtext ? `<div class="script-slide-sub">${s.subtext}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  scriptBox.innerHTML = `
+    <div class="script-label mono" style="color:${seq.color}">FULL SEQUENCE SCRIPT</div>
+    ${scriptSlides}
+  `;
+}
+
+function selectSeq(i) { activeSeq = i; activeSlide = 0; render(); }
+function selectSlide(i) { activeSlide = i; render(); }
+function prevSlide() { if (activeSlide > 0) { activeSlide--; render(); } }
+function nextSlide() {
+  const seq = sequences[activeSeq];
+  if (activeSlide < seq.slides.length - 1) { activeSlide++; render(); }
+}
+
+render();
+</script>
+</body>
+</html>
